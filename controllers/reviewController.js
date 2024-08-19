@@ -4,11 +4,11 @@ const Review = require('../models/review')
 
 const createReview = async (req, res) => {
     try {
-        const { wineId, userId, title, review } = req.body
+        const { wineId, title, review } = req.body
         const newReview = new Review({
             title: title,
             review: review,
-            user: userId,
+            user: req.user.id,
             wine: wineId
         })
         await newReview.save()
