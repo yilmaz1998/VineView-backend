@@ -20,18 +20,18 @@ const createFavorite = async (req, res) => {
         await newFavorite.save()
         res.status(201).json(newFavorite)
     } catch (error) {
-        res.status(404).josn({ message: error.message })
+        res.status(404).json({ message: error.message })
     }
 }
 
 
 const getFavorite = async (req, res) => {
     try {
-        const currentUser = req.user.id
-        const favorites = await Favorite.find({ user: currentUser }).populate('wine')
+        // const currentUser = req.user.id
+        const favorites = await Favorite.find({ }).populate('wine')
         res.status(201).json(favorites)
     } catch (error) {
-        res.status(404).josn({ message: error.message })
+        res.status(404).json({ message: error.message })
     }
 }
 
@@ -46,7 +46,7 @@ const showFavorite = async (req, res) => {
         }
         res.json(favorite)
     } catch (error) {
-        res.status(404).josn({ message: error.message })
+        res.status(404).json({ message: error.message })
     }
 }
 
@@ -56,7 +56,7 @@ const deleteFavorite = async (req, res) => {
         const deletedFavorite = await Favorite.findByIdAndDelete(req.params.id)
         res.status(201).json(deletedFavorite)
     } catch (error) {
-        res.status(404).josn({ message: error.message })
+        res.status(404).json({ message: error.message })
     }
 }
 
