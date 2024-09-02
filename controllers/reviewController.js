@@ -49,10 +49,24 @@ const getReviewById = async (req, res) => {
 const updateReview = async (req, res) => {
     try {
         const { title, review } = req.body
-        const updatedReview = await Review.findByIdAndUpdate(req.params.id, { title, review }, {new: true})
-        if (!updatedReview) {
-            return res.status(404).json({ message: "Review not found."})
+        const reviewId = req.params.id
+
+        const existingReview = await Review.findById(reviewId)
+
+        if (!existingReview) {
+            return res.status(404).json({ message: "Review not found." })
         }
+
+        if (existingReview.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Unauthorized to update this review." })
+        }
+
+        const updatedReview = await Review.findByIdAndUpdate(
+            reviewId,
+            { title, review },
+            { new: true }
+        )
+
         res.json(updatedReview)
     } catch (error) {
         res.status(400).json({ message: error.message })
@@ -66,11 +80,19 @@ const deleteReview = async (req, res) => {
         const reviewId = req.params.id
 
         const review = await Review.findById(reviewId)
+
         if (!review) {
             return res.status(404).json({ message: "Review not found" })
         }
+
+        if (review.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Unauthorized to delete this review." });
+        }
+
         const deletedReview = await Review.findByIdAndDelete(reviewId)
+
         res.status(200).json(deletedReview)
+
     } catch (error) {
         res.status(400).json({ message: error.message })
     }

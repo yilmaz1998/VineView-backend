@@ -27,8 +27,8 @@ const createFavorite = async (req, res) => {
 
 const getFavorite = async (req, res) => {
     try {
-        // const currentUser = req.user.id
-        const favorites = await Favorite.find({ }).populate('wine')
+        const currentUser = req.user.id
+        const favorites = await Favorite.find({ user: currentUser }).populate('wine')
         res.status(201).json(favorites)
     } catch (error) {
         res.status(404).json({ message: error.message })
